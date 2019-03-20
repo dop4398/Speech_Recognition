@@ -58,10 +58,17 @@ namespace console_speech
 
                 // Here we have a lot of flexibility when defining grammars.
                 // We could create new Grammar objects for other commands.
+                string[] memes = new string[] { "despaseeto", "all star by smash mouth" };
+                Choices ch_memes = new Choices(memes);
+                GrammarBuilder gb_PlaySong = new GrammarBuilder();
+                gb_PlaySong.Append("Alexa play");
+                gb_PlaySong.Append(ch_memes);
+                Grammar g_PlaySong = new Grammar(gb_PlaySong);
 
                 // Pass them into the speech recognizer once they're all created.
                 sre.LoadGrammarAsync(g_StartStop);
                 sre.LoadGrammarAsync(g_WhatIsXplusY);
+                sre.LoadGrammarAsync(g_PlaySong);
                 sre.RecognizeAsync(RecognizeMode.Multiple); // Multiple for when we have more than one Grammar.
 
                 while(done == false)
@@ -125,6 +132,13 @@ namespace console_speech
                     words[4] + " equals " + sum + ")");
                 ss.SpeakAsync(words[2] + " plus " +
                     words[4] + " equals " + sum);
+            }
+
+            // Play song test
+            if(txt.IndexOf("Alexa play") >= 0)
+            {
+                Console.WriteLine("(Speaking: Playing " + txt + ")");
+                ss.SpeakAsync("Playing " + txt);
             }
         } // sre_SpeechRecognized
     } // Program
