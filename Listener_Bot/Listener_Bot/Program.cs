@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 using Discord;
 using Discord.WebSocket;
+using Discord.Audio;
 using Discord.Commands;
 
-// Where I left off: https://www.youtube.com/watch?v=vUPWrRQsEeE
+// Where I left off: https://www.youtube.com/watch?v=QGYCgAFFvL0
 
 namespace Listener_Bot
 {
@@ -39,6 +40,7 @@ namespace Listener_Bot
 
             // Configure the methods
             _client.MessageReceived += Client_MessageReceived;
+            _client.MessageReceived += Client_MessageHeard;
             await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), services: null);
 
             _client.Ready += Client_Ready;
@@ -65,10 +67,9 @@ namespace Listener_Bot
 
         private async Task Client_MessageReceived(SocketMessage messageParam)
         {
-            var message = messageParam as SocketUserMessage;
-            var context = new SocketCommandContext(_client, message);
+            var message = messageParam as SocketUserMessage;         
 
-            if(context.Message == null || context.Message.Content == "" || context.User.IsBot)
+            if(message == null)
             {
                 return;
             }
@@ -79,11 +80,18 @@ namespace Listener_Bot
                 return;
             }
 
+            var context = new SocketCommandContext(_client, message);
+
             var result = await _commands.ExecuteAsync(context, argPos, services: null);
             if(!result.IsSuccess)
             {
                 Console.WriteLine($"[{DateTime.Now} at Commands] Something went wrong with executing a command. Text: {context.Message.Content} | Error: {result.ErrorReason}");
             }
+        }
+
+        private async Task Client_MessageHeard(SocketMessage messageParam)
+        {
+
         }
     }
 }

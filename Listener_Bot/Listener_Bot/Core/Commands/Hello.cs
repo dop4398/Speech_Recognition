@@ -8,13 +8,12 @@ using Discord.Commands;
 
 namespace Listener_Bot.Core.Commands
 {
-    class Hello : ModuleBase<SocketCommandContext>
+    public class Hello : ModuleBase<SocketCommandContext>
     {
         [Command("hello there")]
         [Alias("Hello there!")]
         [Summary("Hello command")]
-
-        public async Task HelloThere()
+        public async Task HelloThereCmd()
         {
             await Context.Channel.SendMessageAsync("General Kenobi! You are a bold one...");
         }
